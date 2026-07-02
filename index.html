@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local Food Procurement Workbook — FARMWISE Indiana</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root{
+  --gd:#2D5016;--gm:#4A7C2F;--gl:#E8F0E0;--gp:#F4F8EF;
+  --am:#C17F3B;--ch:#1E2520;--gr:#6B7A65;--bd:#C8D4BF;--wh:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--gp);color:var(--ch);font-size:15px;line-height:1.6;}
+/* Header */
+.site-header{background:var(--gd);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.logo{font-family:'Playfair Display',serif;color:#fff;font-size:22px;letter-spacing:.04em;}
+.logo span{color:#8DC96E;}
+.logo-sub{color:#A8C892;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.hdr-contact{color:#A8C892;font-size:13px;}
+/* Hero */
+.hero{background:var(--gm);padding:40px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;}
+.hero h1{font-family:'Playfair Display',serif;color:#fff;font-size:32px;line-height:1.2;max-width:560px;margin-bottom:8px;}
+.hero p{color:#C0D9A8;font-size:13px;max-width:500px;}
+/* Tabs */
+.tab-nav{display:flex;background:var(--gd);padding:0 40px;border-bottom:3px solid var(--am);overflow-x:auto;}
+.tab-btn{background:none;border:none;color:#A8C892;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:14px 20px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .2s,background .2s;}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,.06);}
+.tab-btn.active{color:#fff;border-bottom-color:var(--am);}
+/* Progress */
+.prog-bar{background:var(--gd);padding:8px 40px;display:flex;align-items:center;gap:14px;}
+.prog-track{flex:1;height:4px;background:rgba(255,255,255,.2);border-radius:2px;}
+.prog-fill{height:100%;background:var(--am);border-radius:2px;transition:width .4s;}
+.prog-lbl{color:#A8C892;font-size:11px;white-space:nowrap;}
+/* Pages */
+.form-page{display:none;padding:36px 40px;max-width:940px;margin:0 auto;}
+.form-page.active{display:block;}
+/* Notice */
+.notice{background:#FDF3E7;border:1px solid #e8c88a;border-radius:6px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#7a4f1a;}
+.notice strong{display:block;margin-bottom:3px;font-size:13px;}
+.notice code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px;font-size:11px;}
+/* Section blocks */
+.sb{background:#fff;border:1px solid var(--bd);border-radius:7px;margin-bottom:24px;overflow:hidden;}
+.sh{background:var(--gl);padding:12px 22px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bd);}
+.sn{background:var(--gm);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.st{font-family:'Playfair Display',serif;font-size:16px;color:var(--gd);}
+.sb-body{padding:22px;}
+.s-intro{font-size:12px;color:var(--gr);margin-bottom:18px;padding:10px 14px;background:var(--gp);border-left:3px solid var(--gm);border-radius:0 4px 4px 0;}
+/* Field grid */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.f{display:flex;flex-direction:column;gap:4px;}
+.f.s2{grid-column:span 2;}
+label{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--gd);}
+label .req{color:var(--am);margin-left:2px;}
+.hint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--gr);font-size:11px;display:block;margin-top:1px;}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],select,textarea{
+  border:1.5px solid var(--bd);border-radius:4px;padding:8px 11px;font-family:'Inter',sans-serif;
+  font-size:13px;color:var(--ch);background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gm);box-shadow:0 0 0 3px rgba(74,124,47,.11);}
+textarea{resize:vertical;min-height:66px;}
+/* Radio / checkbox */
+.rg{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px;}
+.rl{text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--ch);}
+.rl input{accent-color:var(--gm);width:14px;height:14px;}
+.cl{text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;display:flex;gap:7px;align-items:flex-start;cursor:pointer;color:var(--ch);line-height:1.4;}
+.cl input{accent-color:var(--gm);width:14px;height:14px;flex-shrink:0;margin-top:2px;}
+/* Check tables */
+.ct{width:100%;border-collapse:collapse;margin-top:4px;}
+.ct thead tr{background:var(--gl);}
+.ct th{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gd);padding:9px 11px;text-align:left;border:1px solid var(--bd);}
+.ct td{padding:9px 11px;border:1px solid var(--bd);font-size:13px;vertical-align:top;}
+.ct tr:nth-child(even) td{background:var(--gp);}
+.ct td:first-child{font-weight:500;}
+.ct td input[type=checkbox]{width:15px;height:15px;accent-color:var(--gm);cursor:pointer;}
+.ct td input[type=text]{border:1px solid var(--bd);padding:5px 7px;font-size:12px;}
+/* Product tables */
+.pt-wrap{overflow-x:auto;}
+.pt{width:100%;border-collapse:collapse;min-width:660px;}
+.pt th{background:var(--gd);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:9px 8px;text-align:left;border:1px solid #1a3a0a;}
+.pt td{border:1px solid var(--bd);padding:7px;vertical-align:top;}
+.pt tr:nth-child(even) td{background:var(--gp);}
+.pt td input[type=text],.pt td select{padding:5px 7px;font-size:12px;border:1px solid var(--bd);border-radius:3px;width:100%;}
+.add-btn{margin-top:10px;background:none;border:1.5px dashed var(--gm);color:var(--gm);padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;}
+.add-btn:hover{background:var(--gl);}
+/* Bottom bar */
+.bottom-bar{padding:0 40px 52px;max-width:940px;margin:0 auto;}
+.action-bar{background:#fff;border:1px solid var(--bd);border-radius:7px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.action-note{font-size:12px;color:var(--gr);}
+.action-note strong{color:var(--ch);display:block;margin-bottom:2px;}
+.btn-grp{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-pdf{background:var(--gd);color:#fff;border:none;padding:12px 26px;border-radius:5px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;}
+.btn-pdf:hover{background:var(--gm);}
+/* Toast */
+#toast{position:fixed;bottom:28px;right:28px;background:var(--gd);color:#fff;padding:13px 22px;border-radius:7px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:transform .3s,opacity .3s;z-index:900;border-left:4px solid var(--am);}
+#toast.show{transform:translateY(0);opacity:1;}
+@media(max-width:640px){
+  .form-page,.bottom-bar{padding-left:16px;padding-right:16px;}
+  .fg{grid-template-columns:1fr;}
+  .f.s2{grid-column:span 1;}
+  .site-header,.hero,.prog-bar,.tab-nav{padding-left:16px;padding-right:16px;}
+  .hero h1{font-size:24px;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="logo">FARM<span>WISE</span> Indiana</div>
+    <div class="logo-sub">Local Food Value Chain Network</div>
+  </div>
+  <div class="hdr-contact">hello@farmwiseindiana.org &nbsp;·&nbsp; 317.455.8422</div>
+</header>
+
+<div class="hero">
+  <h1>Local Food Procurement Workbook</h1>
+  <p>A checklist and guide for farmers, producers, buyers, and food hubs. Complete your section to begin building a successful wholesale partnership.</p>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('producer',this)">Part 1 — Producer</button>
+  <button class="tab-btn" onclick="switchTab('buyer',this)">Part 2 — Buyer</button>
+</nav>
+<div class="prog-bar">
+  <div class="prog-track"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+  <div class="prog-lbl" id="pLbl">0% complete</div>
+</div>
+
+
+<!-- ═══════════ PRODUCER PAGE ═══════════ -->
+<div id="page-producer" class="form-page active">
+<form id="producerForm" onsubmit="return false;">
+
+<div class="sb">
+  <div class="sh"><div class="sn">1</div><div class="st">Farmer &amp; Farm Profile — Contact Information</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label for="p_farm">Farm / Business Name <span class="req">*</span></label><input type="text" id="p_farm" name="Farm Business Name" placeholder="e.g. Sunrise Valley Farm" required></div>
+    <div class="f"><label for="p_cn">Primary Contact Name <span class="req">*</span></label><input type="text" id="p_cn" name="Primary Contact Name" placeholder="Full name" required></div>
+    <div class="f"><label for="p_ph">Phone Number <span class="req">*</span></label><input type="tel" id="p_ph" name="Phone Number" placeholder="(555) 000-0000" required></div>
+    <div class="f"><label for="p_em">Email Address <span class="req">*</span></label><input type="email" id="p_em" name="Email Address" placeholder="you@farm.com" required></div>
+    <div class="f s2"><label for="p_fa">Farm Mailing Address</label><input type="text" id="p_fa" name="Farm Mailing Address" placeholder="Street, City, State, ZIP"></div>
+    <div class="f s2"><label for="p_pa">Personal Mailing Address <span class="hint">Only if different from above</span></label><input type="text" id="p_pa" name="Personal Mailing Address" placeholder="Street, City, State, ZIP"></div>
+    <div class="f s2"><label for="p_web">Website / Social Media Links <span class="hint">Optional</span></label><input type="url" id="p_web" name="Website Social Media" placeholder="https://yourfarm.com"></div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">1</div><div class="st">Farm Operation Details</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label for="p_yr">Years in Operation</label><input type="number" id="p_yr" name="Years in Operation" placeholder="e.g. 12" min="0"></div>
+    <div class="f"><label for="p_ac">Total Farmed Acreage or Square Footage</label><input type="text" id="p_ac" name="Total Farmed Acreage or Square Footage" placeholder="e.g. 150 acres"></div>
+    <div class="f s2"><label for="p_lv">Inventory of Livestock <span class="hint">Number of each, by species</span></label><textarea id="p_lv" name="Livestock Inventory" placeholder="e.g. 40 beef cattle, 200 laying hens, 12 hogs"></textarea></div>
+    <div class="f"><label>Has your farm sold wholesale before?</label><div class="rg"><label class="rl"><input type="radio" name="Sold Wholesale Before" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Sold Wholesale Before" value="No"> No</label></div></div>
+    <div class="f"><label>Do you have on-site cold storage?</label><div class="rg"><label class="rl"><input type="radio" name="On-Site Cold Storage" value="Yes"> Yes</label><label class="rl"><input type="radio" name="On-Site Cold Storage" value="No"> No</label></div></div>
+    <div class="f s2"><label for="p_wse">If yes, describe your wholesale experience</label><textarea id="p_wse" name="Wholesale Experience" placeholder="Describe previous wholesale relationships, volume sold, markets, etc."></textarea></div>
+    <div class="f s2"><label for="p_col">Do you collaborate with other farmers to supply institutional buyers?</label><textarea id="p_col" name="Farmer Collaboration" placeholder="Describe any cooperative arrangements or farmer networks."></textarea></div>
+    <div class="f s2"><label for="p_op">Other products grown / raised <span class="hint">Not your focus, but possible to grow</span></label><textarea id="p_op" name="Other Products" placeholder="List any secondary or potential products."></textarea></div>
+    <div class="f"><label>Are you currently producing at desired capacity?</label><div class="rg"><label class="rl"><input type="radio" name="Producing at Capacity" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Producing at Capacity" value="No"> No</label></div></div>
+    <div class="f"><label for="p_st">Staff Size</label><input type="number" id="p_st" name="Staff Size" placeholder="e.g. 5" min="0"></div>
+    <div class="f"><label>Farm Ownership</label>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px;">
+        <label class="cl"><input type="checkbox" name="Veteran Owned" value="Yes"> Veteran-owned</label>
+        <label class="cl"><input type="checkbox" name="Person of Color Owned" value="Yes"> Person-of-color-owned</label>
+        <label class="cl"><input type="checkbox" name="Woman Owned" value="Yes"> Woman-owned</label>
+      </div>
+    </div>
+    <div class="f"><label>Educational &amp; Outreach Availability</label>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px;">
+        <label class="cl"><input type="checkbox" name="Visit Institution" value="Yes"> Available to visit institution / talk with students</label>
+        <label class="cl"><input type="checkbox" name="In-Person Field Trips" value="Yes"> In-person field trips available</label>
+        <label class="cl"><input type="checkbox" name="Virtual Field Trips" value="Yes"> Virtual field trips available</label>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">1</div><div class="st">Certifications &amp; Practices</div></div>
+  <div class="sb-body">
+    <table class="ct">
+      <thead><tr><th style="width:210px">Certification</th><th style="width:52px;text-align:center">✓</th><th>Details (inspection frequency, certifying body, general practices)</th></tr></thead>
+      <tbody>
+        <tr><td>USDA Certified Organic</td><td style="text-align:center"><input type="checkbox" name="Cert USDA Organic" value="Yes"></td><td><input type="text" name="Cert USDA Organic Details" placeholder="Details…"></td></tr>
+        <tr><td>GAP / GHP Certified</td><td style="text-align:center"><input type="checkbox" name="Cert GAP GHP" value="Yes"></td><td><input type="text" name="Cert GAP GHP Details" placeholder="Details…"></td></tr>
+        <tr><td>Egg-Handler's License</td><td style="text-align:center"><input type="checkbox" name="Cert Egg Handler" value="Yes"></td><td><input type="text" name="Cert Egg Handler Details" placeholder="Details…"></td></tr>
+        <tr><td>Dairy Licenses</td><td style="text-align:center"><input type="checkbox" name="Cert Dairy" value="Yes"></td><td><input type="text" name="Cert Dairy Details" placeholder="Details…"></td></tr>
+        <tr><td>On-Farm Food Safety Plan</td><td style="text-align:center"><input type="checkbox" name="Cert Food Safety Plan" value="Yes"></td><td><input type="text" name="Cert Food Safety Plan Details" placeholder="Describe plan…"></td></tr>
+        <tr><td>Inspected Kitchen &amp; Product Inspection</td><td style="text-align:center"><input type="checkbox" name="Cert Inspected Kitchen" value="Yes"></td><td><input type="text" name="Cert Inspected Kitchen Details" placeholder="County or state inspectors?"></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;">
+    <table class="ct">
+      <thead><tr><th style="width:210px">Practice</th><th style="width:52px;text-align:center">✓</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td>No spray / Chemical-free</td><td style="text-align:center"><input type="checkbox" name="Prac No Spray" value="Yes"></td><td><input type="text" name="Prac No Spray Details" placeholder="Details…"></td></tr>
+        <tr><td>Low- or no-tillage</td><td style="text-align:center"><input type="checkbox" name="Prac Low Tillage" value="Yes"></td><td><input type="text" name="Prac Low Tillage Details" placeholder="Details…"></td></tr>
+        <tr><td>Certified Humane</td><td style="text-align:center"><input type="checkbox" name="Prac Certified Humane" value="Yes"></td><td><input type="text" name="Prac Certified Humane Details" placeholder="Details…"></td></tr>
+        <tr><td>Grass-finished</td><td style="text-align:center"><input type="checkbox" name="Prac Grass Finished" value="Yes"></td><td><input type="text" name="Prac Grass Finished Details" placeholder="Details…"></td></tr>
+        <tr><td>Free-range or cage-free poultry</td><td style="text-align:center"><input type="checkbox" name="Prac Free Range" value="Yes"></td><td><input type="text" name="Prac Free Range Details" placeholder="Details…"></td></tr>
+        <tr><td>Produce Safety Alliance Grower Training</td><td style="text-align:center"><input type="checkbox" name="Prac PSA Training" value="Yes"></td><td><input type="text" name="Prac PSA Training Details" placeholder="Details…"></td></tr>
+        <tr><td>Other</td><td style="text-align:center"><input type="checkbox" name="Prac Other" value="Yes"></td><td><input type="text" name="Prac Other Details" placeholder="Describe…"></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">2</div><div class="st">Product Inventory — Specialty Crops</div></div>
+  <div class="sb-body">
+    <p class="s-intro">Specialty crops include fruits, vegetables, dry edible beans, tree nuts, honey, maple syrup, and herbs. List products you are interested in selling to the institution and provide your best estimate for availability.</p>
+    <div class="pt-wrap"><table class="pt" id="cropTable">
+      <thead><tr><th>Product</th><th>Months Available</th><th>Pack Size</th><th>Est. Quantity</th><th>Unit Price</th><th>Washed?</th><th>Min. Processed?</th><th>Custom Size/Pack?</th></tr></thead>
+      <tbody><tr>
+        <td><input type="text" name="Crop Product 1" placeholder="e.g. Roma Tomatoes"></td>
+        <td><input type="text" name="Crop Months 1" placeholder="e.g. June–Oct"></td>
+        <td><input type="text" name="Crop Pack Size 1" placeholder="e.g. 20 lb box"></td>
+        <td><input type="text" name="Crop Quantity 1" placeholder="e.g. 100 lbs/wk"></td>
+        <td><input type="text" name="Crop Price 1" placeholder="e.g. $2.50/lb"></td>
+        <td><select name="Crop Washed 1"><option value="">—</option><option>Yes</option><option>No</option></select></td>
+        <td><select name="Crop Processed 1"><option value="">—</option><option>Yes</option><option>No</option></select></td>
+        <td><select name="Crop Custom 1"><option value="">—</option><option>Yes</option><option>No</option><option>Depends</option></select></td>
+      </tr></tbody>
+    </table></div>
+    <button type="button" class="add-btn" onclick="addRow('cropTable','Crop',['Product','Months','Pack Size','Quantity','Price','Washed','Processed','Custom'])">+ Add another crop</button>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">2</div><div class="st">Product Inventory — Protein</div></div>
+  <div class="sb-body">
+    <p class="s-intro">Protein includes seafood, meat, poultry, dairy products, eggs, and soy-based products.</p>
+    <div class="pt-wrap"><table class="pt" id="proteinTable">
+      <thead><tr><th>Product</th><th>Months Available</th><th>Est. Quantity</th><th>Unit Price Range</th><th>How Processed?</th><th>Standard Packaging</th><th>Custom Size/Pack?</th></tr></thead>
+      <tbody><tr>
+        <td><input type="text" name="Protein Product 1" placeholder="e.g. Pulled Pork"></td>
+        <td><input type="text" name="Protein Months 1" placeholder="e.g. Jan–Dec"></td>
+        <td><input type="text" name="Protein Quantity 1" placeholder="e.g. 25 lbs/wk"></td>
+        <td><input type="text" name="Protein Price 1" placeholder="e.g. $8.00/lb"></td>
+        <td><input type="text" name="Protein Processed 1" placeholder="e.g. pre-shredded"></td>
+        <td><input type="text" name="Protein Packaging 1" placeholder="e.g. 1 lb packages"></td>
+        <td><select name="Protein Custom 1"><option value="">—</option><option>Yes</option><option>No</option><option>Depends</option></select></td>
+      </tr></tbody>
+    </table></div>
+    <button type="button" class="add-btn" onclick="addRow('proteinTable','Protein',['Product','Months','Quantity','Price','Processed','Packaging','Custom'])">+ Add another protein</button>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">2</div><div class="st">Product Inventory — Value-Added Products</div></div>
+  <div class="sb-body">
+    <p class="s-intro">Value-added products include jams and jellies, sauces, pickles, milled grains (flours), breads and pastries.</p>
+    <div class="pt-wrap"><table class="pt" id="valueTable">
+      <thead><tr><th>Product</th><th>Ingredients (incl. key allergens)</th><th>Months Available</th><th>Packaging Size(s)</th><th>Est. Quantity</th><th>Unit Price Range</th></tr></thead>
+      <tbody><tr>
+        <td><input type="text" name="Value Product 1" placeholder="e.g. Pickled Cucumbers"></td>
+        <td><input type="text" name="Value Ingredients 1" placeholder="e.g. Cucumbers, garlic, dill, vinegar…"></td>
+        <td><input type="text" name="Value Months 1" placeholder="e.g. July–Nov"></td>
+        <td><input type="text" name="Value Pack Size 1" placeholder="e.g. 16 oz jars"></td>
+        <td><input type="text" name="Value Quantity 1" placeholder="e.g. 80 oz/month"></td>
+        <td><input type="text" name="Value Price 1" placeholder="e.g. $5.00/jar"></td>
+      </tr></tbody>
+    </table></div>
+    <button type="button" class="add-btn" onclick="addRow('valueTable','Value',['Product','Ingredients','Months','Pack Size','Quantity','Price'])">+ Add another product</button>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">3</div><div class="st">Delivery Details</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label>Who is responsible for delivery?</label><select name="Delivery Responsibility"><option value="">Select…</option><option>Farm</option><option>Institution</option><option>Third-party distributor</option><option>Varies</option></select></div>
+    <div class="f"><label>Do you have liability insurance?</label><div class="rg"><label class="rl"><input type="radio" name="Liability Insurance" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Liability Insurance" value="No"> No</label></div></div>
+    <div class="f"><label for="p_dd">Delivery days / times available</label><input type="text" id="p_dd" name="Delivery Days Times" placeholder="e.g. Mon &amp; Wed, 7–10 AM"></div>
+    <div class="f"><label for="p_pu">Farm pickup availability <span class="hint">If applicable</span></label><input type="text" id="p_pu" name="Farm Pickup Availability" placeholder="e.g. Fri 8 AM – 12 PM"></div>
+    <div class="f"><label for="p_dr">Delivery radius</label><input type="text" id="p_dr" name="Delivery Radius" placeholder="e.g. 50 miles, Marion County"></div>
+    <div class="f"><label>Willing to deliver to multiple locations?</label><div class="rg"><label class="rl"><input type="radio" name="Multi Location" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Multi Location" value="No"> No</label></div></div>
+    <div class="f"><label for="p_mn">Minimum order size per delivery</label><input type="text" id="p_mn" name="Minimum Order Size" placeholder="e.g. $100 or 50 lbs"></div>
+    <div class="f"><label for="p_mx">Maximum order size per delivery</label><input type="text" id="p_mx" name="Maximum Order Size" placeholder="e.g. 500 lbs"></div>
+    <div class="f"><label for="p_il">Insurance policy limit <span class="hint">If applicable</span></label><input type="text" id="p_il" name="Insurance Policy Limit" placeholder="e.g. $1,000,000"></div>
+    <div class="f"><label for="p_df">Delivery charge / fee scale</label><input type="text" id="p_df" name="Delivery Fee" placeholder="e.g. Included in price / $25 flat fee"></div>
+    <div class="f s2"><label for="p_cc">Cold chain procedure <span class="hint">How do you keep products cold during transport?</span></label><textarea id="p_cc" name="Cold Chain Procedure" placeholder="Describe refrigerated vehicle, coolers, ice packs, procedures, etc."></textarea></div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">3</div><div class="st">Ordering &amp; Payment</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label>Preferred contact method</label><select name="Preferred Contact Method"><option value="">Select…</option><option>Email</option><option>Phone</option><option>Text</option><option>Online system</option></select></div>
+    <div class="f"><label>Preferred ordering method</label><select name="Preferred Ordering Method"><option value="">Select…</option><option>Email</option><option>Phone</option><option>Text</option><option>Online system</option></select></div>
+    <div class="f"><label for="p_nd">Days' notice required for an order</label><input type="text" id="p_nd" name="Notice Days Required" placeholder="e.g. 3 business days"></div>
+    <div class="f"><label for="p_co">Order cut-off day / time</label><input type="text" id="p_co" name="Order Cutoff" placeholder="e.g. Thursday by 5 PM for Monday delivery"></div>
+    <div class="f"><label>Invoicing terms</label><select name="Invoicing Terms"><option value="">Select…</option><option>Payment upon delivery</option><option>Net 15</option><option>Net 30</option><option>Net 60</option><option>Other</option></select></div>
+    <div class="f"><label for="p_pf">Forms of payment accepted</label><input type="text" id="p_pf" name="Payment Forms Accepted" placeholder="e.g. Check, ACH, Credit card"></div>
+    <div class="f"><label>Written contract required?</label><div class="rg"><label class="rl"><input type="radio" name="Written Contract Required" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Written Contract Required" value="No"> No</label></div></div>
+    <div class="f"><label>Return / credit policy</label><select name="Return Credit Policy"><option value="">Select…</option><option>Accept returns</option><option>Offer credits / replacements</option><option>No-return policy</option></select></div>
+    <div class="f s2"><label for="p_qp">Credit / return policy for unacceptable quality</label><textarea id="p_qp" name="Quality Return Policy" placeholder="Explain your process when a buyer receives product that doesn't meet quality standards."></textarea></div>
+    <div class="f s2"><label for="p_od">Any ordering deadlines for a given period? <span class="hint">Day, week, month</span></label><textarea id="p_od" name="Ordering Deadlines" placeholder="e.g. Season orders must be placed by March 1 for summer delivery."></textarea></div>
+  </div></div>
+</div>
+
+</form>
+</div><!-- /producer -->
+
+<!-- ═══════════ BUYER PAGE ═══════════ -->
+<div id="page-buyer" class="form-page">
+<form id="buyerForm" onsubmit="return false;">
+
+<div class="sb">
+  <div class="sh"><div class="sn">1</div><div class="st">Institution / Business Profile — Contact Information</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label for="b_inst">Institution / Business Name <span class="req">*</span></label><input type="text" id="b_inst" name="Institution Business Name" placeholder="e.g. Greenfield School District" required></div>
+    <div class="f"><label for="b_cn">Primary Contact Name <span class="req">*</span></label><input type="text" id="b_cn" name="Primary Contact Name" placeholder="Full name &amp; title" required></div>
+    <div class="f"><label for="b_ph">Phone Number <span class="req">*</span></label><input type="tel" id="b_ph" name="Phone Number" placeholder="(555) 000-0000" required></div>
+    <div class="f"><label for="b_em">Email Address <span class="req">*</span></label><input type="email" id="b_em" name="Email Address" placeholder="you@institution.org" required></div>
+    <div class="f s2"><label for="b_ad">Institution / Business Address</label><input type="text" id="b_ad" name="Institution Address" placeholder="Street, City, State, ZIP"></div>
+    <div class="f s2"><label for="b_web">Website / Social Media Links <span class="hint">Optional</span></label><input type="url" id="b_web" name="Website Social Media" placeholder="https://"></div>
+    <div class="f s2"><label for="b_ch">Preferred contact hours, days, and months</label><input type="text" id="b_ch" name="Preferred Contact Hours" placeholder="e.g. Mon–Fri, 8 AM–3 PM, school year only"></div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">1</div><div class="st">Food Service Operation Details</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label for="b_md">Number of meals served daily</label><input type="number" id="b_md" name="Meals Served Daily" placeholder="e.g. 500" min="0"></div>
+    <div class="f"><label for="b_st">Staff size</label><input type="number" id="b_st" name="Staff Size" placeholder="e.g. 12" min="0"></div>
+    <div class="f s2"><label>Has your institution sourced directly from a farm or food hub before?</label><div class="rg"><label class="rl"><input type="radio" name="Sourced From Farm Before" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Sourced From Farm Before" value="No"> No</label></div></div>
+    <div class="f s2"><label for="b_se">If yes, describe your experience</label><textarea id="b_se" name="Sourcing Experience" placeholder="What worked well? What challenges did you face?"></textarea></div>
+    <div class="f s2"><label for="b_rc">Certifications required of food producers</label><textarea id="b_rc" name="Required Certifications" placeholder="e.g. GAP certified, USDA Organic, liability insurance minimum $1M"></textarea></div>
+    <div class="f s2"><label for="b_cd">Chef or food service director for local sourcing decisions</label><textarea id="b_cd" name="Chef Food Service Director" placeholder="Name and role. Would you like to be connected to a peer mentor sourcing locally?"></textarea></div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">2</div><div class="st">Product Interest &amp; Usage</div></div>
+  <div class="sb-body">
+    <p class="s-intro">List farm products you want to source locally — both what you can use now and what you'd like to incorporate in the future. Specify which items are of highest interest and how they would typically be used.</p>
+    <div class="pt-wrap"><table class="pt" id="buyerProductTable">
+      <thead><tr><th>Farm Product of Interest</th><th>Delivery Frequency</th><th>Est. Quantity Needed</th><th>Target Season</th><th>Planned Menu Use</th><th>Required Packaging / Prep Notes</th></tr></thead>
+      <tbody><tr>
+        <td><input type="text" name="Buyer Product 1" placeholder="e.g. Roma Tomatoes"></td>
+        <td><select name="Buyer Frequency 1"><option value="">—</option><option>One-time</option><option>Weekly</option><option>Bi-weekly</option><option>Monthly</option></select></td>
+        <td><input type="text" name="Buyer Quantity 1" placeholder="e.g. 75 lbs/wk"></td>
+        <td><input type="text" name="Buyer Season 1" placeholder="e.g. Aug–Oct"></td>
+        <td><input type="text" name="Buyer Menu Use 1" placeholder="e.g. Taco bar topping"></td>
+        <td><input type="text" name="Buyer Pack Notes 1" placeholder="e.g. Must be ripe but firm, 20-lb boxes"></td>
+      </tr></tbody>
+    </table></div>
+    <button type="button" class="add-btn" onclick="addRow('buyerProductTable','Buyer',['Product','Frequency','Quantity','Season','Menu Use','Pack Notes'])">+ Add another product</button>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">3</div><div class="st">High Priority Items</div></div>
+  <div class="sb-body">
+    <p class="s-intro">List items your facility frequently uses even if not listed by the farmer — this gives producers an opportunity to plan to make these products available in the future.</p>
+    <div class="pt-wrap"><table class="pt" id="priorityTable">
+      <thead><tr><th>Item Needed</th><th>Quantity Needed</th><th>Target Season</th><th>How will this item be used / menued? Why is it important?</th></tr></thead>
+      <tbody><tr>
+        <td><input type="text" name="Priority Item 1" placeholder="e.g. Bell Peppers (Red/Green)"></td>
+        <td><input type="text" name="Priority Quantity 1" placeholder="e.g. 10 cases/wk"></td>
+        <td><input type="text" name="Priority Season 1" placeholder="e.g. Aug–Oct"></td>
+        <td><input type="text" name="Priority Use 1" placeholder="e.g. Used in fajitas and bulk stir-fry recipes"></td>
+      </tr></tbody>
+    </table></div>
+    <button type="button" class="add-btn" onclick="addRow('priorityTable','Priority',['Item','Quantity','Season','Use'])">+ Add another item</button>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">3</div><div class="st">Processing Capabilities &amp; Preferences</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f s2"><label for="b_pc">Does the kitchen have staff/time to process (wash, chop, peel) whole, unprocessed produce?</label><textarea id="b_pc" name="Kitchen Processing Capability" placeholder="Describe staff capacity, time available, and equipment."></textarea></div>
+    <div class="f"><label for="b_pr">Packaging requirements for dropoff</label><input type="text" id="b_pr" name="Packaging Requirements" placeholder="e.g. Wax boxes, reusable totes"></div>
+    <div class="f"><label for="b_dt">Preferred delivery / drop-off times</label><input type="text" id="b_dt" name="Preferred Delivery Times" placeholder="e.g. 6–8 AM before service"></div>
+    <div class="f"><label for="b_mb">Max acceptable case / box size <span class="hint">For handling whole produce</span></label><input type="text" id="b_mb" name="Max Box Size" placeholder="e.g. 25 lb box"></div>
+    <div class="f"><label for="b_pp">Preferred packaging sizes</label><input type="text" id="b_pp" name="Preferred Packaging Sizes" placeholder="e.g. 5-lb bulk, individual portions"></div>
+    <div class="f s2"><label>Interest in superficially flawed or No. 2 Grade produce?</label><div class="rg"><label class="rl"><input type="radio" name="Interest Grade 2 Produce" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Interest Grade 2 Produce" value="No"> No</label><label class="rl"><input type="radio" name="Interest Grade 2 Produce" value="Depends on item"> Depends on item</label></div></div>
+  </div></div>
+</div>
+
+<div class="sb">
+  <div class="sh"><div class="sn">4</div><div class="st">Delivery &amp; Invoicing — Ordering &amp; Payment</div></div>
+  <div class="sb-body"><div class="fg">
+    <div class="f"><label>Preferred contact method</label><select name="Preferred Contact Method"><option value="">Select…</option><option>Email</option><option>Phone</option><option>Text</option><option>Online system</option></select></div>
+    <div class="f"><label>Preferred ordering method</label><select name="Preferred Ordering Method"><option value="">Select…</option><option>Email</option><option>Phone</option><option>Text</option><option>Online system</option></select></div>
+    <div class="f s2"><label for="b_bl">Preferred billing contact / method <span class="hint">If different from above</span></label><input type="text" id="b_bl" name="Billing Contact Method" placeholder="Name, email, or phone for billing"></div>
+    <div class="f"><label>Written contract required?</label><div class="rg"><label class="rl"><input type="radio" name="Written Contract Required" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Written Contract Required" value="No"> No</label></div></div>
+    <div class="f"><label>Special labeling requirements for products?</label><div class="rg"><label class="rl"><input type="radio" name="Labeling Requirements" value="Yes"> Yes</label><label class="rl"><input type="radio" name="Labeling Requirements" value="No"> No</label></div></div>
+    <div class="f"><label for="b_no">Days' notice you can provide for an order</label><input type="text" id="b_no" name="Order Notice Days" placeholder="e.g. 3–5 business days"></div>
+    <div class="f"><label for="b_av">Times / days delivery MUST be avoided</label><input type="text" id="b_av" name="Delivery Avoid Times" placeholder="e.g. Never during 11 AM – 1 PM lunch service"></div>
+    <div class="f s2"><label for="b_ds">Staff required at drop-off?</label><textarea id="b_ds" name="Dropoff Staff Required" placeholder="Is a staff member required to receive the delivery, or can drop-off instructions be provided to the producer?"></textarea></div>
+    <div class="f"><label>Preferred invoicing terms</label><select name="Preferred Invoicing Terms"><option value="">Select…</option><option>Payment upon delivery</option><option>Net 15</option><option>Net 30</option><option>Net 60</option><option>Other</option></select></div>
+    <div class="f"><label for="b_pf">Forms of payment you can administer</label><input type="text" id="b_pf" name="Payment Forms" placeholder="e.g. Check, Purchase order, ACH"></div>
+  </div></div>
+</div>
+
+</form>
+</div><!-- /buyer -->
+
+<div class="bottom-bar">
+  <div class="action-bar">
+    <div class="action-note">
+      <strong>FARMWISE Indiana</strong>
+      hello@farmwiseindiana.org &nbsp;·&nbsp; 317.455.8422 &nbsp;·&nbsp; www.farmwiseindiana.org
+    </div>
+    <div class="btn-grp">
+      <button class="btn-pdf" onclick="buildAndDownload()">⬇ Download PDF</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── Tab switching ───
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-' + tab).classList.add('active');
+  updateProgress();
+}
+
+// ─── Dynamic table rows ───
+const rowCounts = {};
+function addRow(tableId, prefix, cols) {
+  rowCounts[tableId] = (rowCounts[tableId] || 1) + 1;
+  const n = rowCounts[tableId];
+  const tbl = document.getElementById(tableId);
+  const newRow = tbl.querySelector('tbody tr').cloneNode(true);
+  newRow.querySelectorAll('input, select').forEach((el, i) => {
+    el.name = prefix + ' ' + (cols[i] || 'Col' + i) + ' ' + n;
+    if (el.tagName === 'INPUT') el.value = ''; else el.selectedIndex = 0;
+  });
+  tbl.querySelector('tbody').appendChild(newRow);
+}
+
+// ─── Progress bar ───
+function updateProgress() {
+  const page = document.querySelector('.form-page.active');
+  const inputs = page.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea,select');
+  let filled = 0;
+  inputs.forEach(i => { if (i.value && i.value.trim()) filled++; });
+  const pct = inputs.length ? Math.round(filled / inputs.length * 100) : 0;
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pLbl').textContent = pct + '% complete';
+}
+document.addEventListener('input', updateProgress);
+document.addEventListener('change', updateProgress);
+
+// ─── Toast ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+// ─── Helper: get field value from active form ───
+function gf(name) {
+  const fId = document.querySelector('.form-page.active form').id;
+  const el = document.querySelector('#' + fId + ' [name="' + name + '"]');
+  return el ? (el.value || '').trim() : '';
+}
+function gr(name) {
+  const fId = document.querySelector('.form-page.active form').id;
+  const el = document.querySelector('#' + fId + ' input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+function gcb(names) {
+  const fId = document.querySelector('.form-page.active form').id;
+  return names.filter(n => document.querySelector('#' + fId + ' input[name="' + n + '"]:checked')).join(', ') || '';
+}
+
+
+// ═══════════════════════════════════════════════════════
+//  PDF GENERATION — print-to-PDF via browser print engine
+// ═══════════════════════════════════════════════════════
+function buildAndDownload() {
+  const page = document.querySelector('.form-page.active');
+  const isProd = page.id === 'page-producer';
+  const fId   = isProd ? 'producerForm' : 'buyerForm';
+  const fType = isProd ? 'PRODUCER' : 'BUYER';
+  const partNum = isProd ? '1' : '2';
+
+  // ── Helpers to read form values ──
+  function v(name) {
+    const el = document.querySelector('#'+fId+' [name="'+name+'"]');
+    return el ? (el.value||'').trim() : '';
+  }
+  function r(name) {
+    const el = document.querySelector('#'+fId+' input[name="'+name+'"]:checked');
+    return el ? el.value : '';
+  }
+  function cb(name) {
+    return !!document.querySelector('#'+fId+' input[name="'+name+'"]:checked');
+  }
+
+  // ── Build a two-column field row ──
+  function fRow(label, value) {
+    const val = value || '';
+    return `<tr>
+      <td class="label-cell">${label}</td>
+      <td class="value-cell">${val ? '<span class="user-val">'+escHtml(val)+'</span>' : ''}</td>
+    </tr>`;
+  }
+
+  // ── Build a three-column cert/practice row ──
+  function cRow(label, cbName, detailName) {
+    const isChecked = cb(cbName);
+    const detail = v(detailName);
+    return `<tr>
+      <td class="label-cell">${label}</td>
+      <td class="check-cell">${isChecked ? '&#9745;' : '&#9633;'}</td>
+      <td class="value-cell">${detail ? '<span class="user-val">'+escHtml(detail)+'</span>' : ''}</td>
+    </tr>`;
+  }
+
+  // ── Build product table from DOM table, padded with blank rows ──
+  function prodTable(tableId, headers, totalRows) {
+    totalRows = totalRows || 8;
+    const tbl = document.getElementById(tableId);
+    if (!tbl) return '';
+    const rows = Array.from(tbl.querySelectorAll('tbody tr'));
+    const nCols = headers.length;
+    const hdrCells = headers.map(h => `<th>${h}</th>`).join('');
+    const dataCells = rows.map(row => {
+      const cells = Array.from(row.querySelectorAll('input,select'));
+      const tds = cells.map(el => {
+        const val = (el.value||'').trim();
+        return `<td class="value-cell">${val ? '<span class="user-val">'+escHtml(val)+'</span>' : ''}</td>`;
+      }).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    const blankCount = Math.max(0, totalRows - rows.length);
+    const blankRow = `<tr>${'<td class="value-cell"></td>'.repeat(nCols)}</tr>`;
+    const blankRows = blankRow.repeat(blankCount);
+    return `<table class="prod-table"><thead><tr>${hdrCells}</tr></thead><tbody>${dataCells}${blankRows}</tbody></table>`;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── Page header (repeats on each inner page) ──
+  function pgHeader(section, subsection) {
+    return `
+      <div class="pg-header">
+        <div class="part-title">PART ${partNum}: ${fType} FORM</div>
+        <div class="section-title">${section}</div>
+        <div class="subsection-title">${subsection}</div>
+      </div>`;
+  }
+
+  // ── Cert table block ──
+  function certBlock(headerLabel, rows) {
+    const rowsHtml = rows.map(r => cRow(r.label, r.cb, r.det)).join('');
+    return `<table class="cert-table">
+      <thead><tr>
+        <th style="width:44%">${headerLabel}</th>
+        <th style="width:12%;text-align:center">Check (&#10003;)</th>
+        <th>Details (e.g., inspection frequency, certifying body, general practices)</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>`;
+  }
+
+  // ════════════════════════
+  //  BUILD PAGES HTML
+  // ════════════════════════
+  let pages = '';
+
+  if (isProd) {
+
+    // Page 1: Contact Information
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 1. Farmer &amp; Farm Profile', 'Contact Information')}
+      <table class="field-table">
+        ${fRow('Farm/Business Name', v('Farm Business Name'))}
+        ${fRow('Primary Contact Name', v('Primary Contact Name'))}
+        ${fRow('Phone Number', v('Phone Number'))}
+        ${fRow('Email Address', v('Email Address'))}
+        ${fRow('Farm Mailing Address', v('Farm Mailing Address'))}
+        ${fRow('Personal Mailing Address (if different)', v('Personal Mailing Address'))}
+        ${fRow('Website/Social Media Links (optional)', v('Website Social Media'))}
+      </table>
+      <div class="pg-num">1</div>
+    </div>`;
+
+    // Page 2: Farm Operation Details
+    const outreach = [cb('In-Person Field Trips')?'In-person':'', cb('Virtual Field Trips')?'Virtual':''].filter(Boolean).join(', ');
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 1. Farmer &amp; Farm Profile', 'Farm Operation Details')}
+      <table class="field-table">
+        ${fRow('Years in operation', v('Years in Operation'))}
+        ${fRow('Has your farm sold wholesale before? (Yes/No)', r('Sold Wholesale Before'))}
+        ${fRow('If yes, please describe your experience:', v('Wholesale Experience'))}
+        ${fRow('Do you talk with another farmer or work with other farmers to supply local food to institutional buyers?', v('Farmer Collaboration'))}
+        ${fRow('Other products grown/raised - perhaps not your focus, but are possible to grow on your farm.', v('Other Products'))}
+        ${fRow('Total farmed acreage or square footage', v('Total Farmed Acreage or Square Footage'))}
+        ${fRow('Inventory of livestock (# of each, by species)', v('Livestock Inventory'))}
+        ${fRow('Are you currently producing at desired capacity?', r('Producing at Capacity'))}
+        ${fRow('Do you have on-site cold storage?', r('On-Site Cold Storage'))}
+        ${fRow('Staff size', v('Staff Size'))}
+        ${fRow('Is your farm veteran-owned? (Yes/No)', cb('Veteran Owned')?'Yes':'')}
+        ${fRow('Is your farm person of color-owned? (Yes/No)', cb('Person of Color Owned')?'Yes':'')}
+        ${fRow('Is your farm woman-owned? (Yes/No)', cb('Woman Owned')?'Yes':'')}
+        ${fRow('Is your farm available to visit the institution to talk with customers or students about how your products are grown? (Yes/No)', cb('Visit Institution')?'Yes':'')}
+        ${fRow('Is your farm available for in person and/or virtual field trips? (Yes/No/Specify)', outreach)}
+      </table>
+      <div class="pg-num">2</div>
+    </div>`;
+
+    // Page 3: Certifications & Practices
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 1. Farmer &amp; Farm Profile', 'Certifications and Practices')}
+      ${certBlock('Certification', [
+        {label:'USDA Certified Organic', cb:'Cert USDA Organic', det:'Cert USDA Organic Details'},
+        {label:'GAP/GHP Certified', cb:'Cert GAP GHP', det:'Cert GAP GHP Details'},
+        {label:"Egg-Handler's License", cb:'Cert Egg Handler', det:'Cert Egg Handler Details'},
+      ])}
+      ${certBlock('Dairy Licenses', [
+        {label:'For farmers: do you have on-farm food safety plan?<br>if yes, please describe:', cb:'Cert Food Safety Plan', det:'Cert Food Safety Plan Details'},
+        {label:'For food producers: do you utilize an inspected kitchen and have you had your product inspected? By county or state inspectors?', cb:'Cert Inspected Kitchen', det:'Cert Inspected Kitchen Details'},
+      ])}
+      ${certBlock('Practices', [
+        {label:'No spray/Chemical-free', cb:'Prac No Spray', det:'Prac No Spray Details'},
+        {label:'Low- or no-tillage', cb:'Prac Low Tillage', det:'Prac Low Tillage Details'},
+        {label:'Certified Humane', cb:'Prac Certified Humane', det:'Prac Certified Humane Details'},
+        {label:'Grass-finished', cb:'Prac Grass Finished', det:'Prac Grass Finished Details'},
+        {label:'Free-range or cage-free poultry', cb:'Prac Free Range', det:'Prac Free Range Details'},
+        {label:'Produce Safety Alliance Grower Training', cb:'Prac PSA Training', det:'Prac PSA Training Details'},
+        {label:'Other (e.g. other animal welfare practices, other organic certifications)', cb:'Prac Other', det:'Prac Other Details'},
+      ])}
+      <div class="pg-num">3</div>
+    </div>`;
+
+    // Page 4: Specialty Crops
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 2: Product Inventory, Processing, &amp; Presentation', 'Specialty Crops')}
+      <p class="intro-text">This section details the specific specialty crop products, and their anticipated quantities and seasonal availability. Specialty crops include fruits and vegetables, dry edible beans, tree nuts, honey, maple syrup, and herbs. Please list the products you are interested in selling to the institution and provide your best estimate for availability. Add more rows as needed.</p>
+      ${prodTable('cropTable', ['Product','Months available','Unit Pack size (e.g. 20 lb box, 5 oz clamshells, 50 lb bag)','Estimated quantity (e.g., 50 lbs/week, 10 cases/month)','Unit price','Can you provide the product washed? (Yes/No)','Can you provide the product minimally processed? (e.g., chopped, shredded, dried, frozen)','Are you able to meet specific requests for product size or packaging? (Yes/No/Depends)'])}
+      <div class="pg-num">4</div>
+    </div>`;
+
+    // Page 5: Protein
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 2: Product Inventory, Processing, &amp; Presentation', 'Protein')}
+      <p class="intro-text">This section details the specific protein products and their anticipated quantities and seasonal availability. Protein includes seafood, meat, poultry, dairy products, eggs, and soy-based products. Please list the products you are interested in selling to the institution and provide your best estimate for availability. Add more rows as needed.</p>
+      ${prodTable('proteinTable', ['Product','Months available','Estimated quantity (e.g., 50 lbs/week, 10 cases/month)','Unit price range','How is the protein processed? (e.g. whole, whole muscle cuts, ground, formed, pasteurized)','What are your standard packaging sizes/types (e.g., 10 lb frozen)?','Are you able to meet specific requests for product size or packaging? (Yes/No/Depends)'])}
+      <div class="pg-num">5</div>
+    </div>`;
+
+    // Page 6: Value-Added Products
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 2: Product Inventory, Processing, &amp; Presentation', 'Value-Added Products')}
+      <p class="intro-text">This section details the specific value-added products and their anticipated quantities and seasonal availability. Value-added products include jams and jellies, sauces, pickles, milled grains (flours), breads and pastries. Please list the products you are interested in selling to the institution and provide your best estimate for availability. Add more rows as needed.</p>
+      ${prodTable('valueTable', ['Product','Ingredients (including key allergens)','Months available','Packaging Size(s)','Estimated quantity','Unit price range'])}
+      <div class="pg-num">6</div>
+    </div>`;
+
+    // Page 7: Delivery Details
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 3: Delivery and Invoicing Logistics &amp; Compliance', 'Delivery Details')}
+      <p class="intro-text">This section addresses the crucial details of delivery, invoicing, and regulatory compliance.</p>
+      <table class="field-table">
+        ${fRow('Who is responsible for delivery?<br>(Farm/Institution/Third-party distributor)', v('Delivery Responsibility'))}
+        ${fRow('What days/times is your farm able to deliver to the site?', v('Delivery Days Times'))}
+        ${fRow('If applicable: what days/times is your farm available for pickup?', v('Farm Pickup Availability'))}
+        ${fRow('How far will you deliver product to a buyer? (eg miles, towns, counties)', v('Delivery Radius'))}
+        ${fRow('What is your minimum order size for a single delivery?', v('Minimum Order Size'))}
+        ${fRow('What is your maximum order size for a single delivery?', v('Maximum Order Size'))}
+        ${fRow('Are you willing to deliver to more than one location?', r('Multi Location'))}
+        ${fRow('What is your cold chain procedure?<br>(how do you keep products cold during transport? Do you have a refrigerated vehicle?)', v('Cold Chain Procedure'))}
+        ${fRow('Do you have liability insurance?<br>(Yes/No)', r('Liability Insurance'))}
+        ${fRow('If yes, what is the policy limit?', v('Insurance Policy Limit'))}
+        ${fRow('Is there a delivery charge? If so, what is the fee scale?<br>(sometimes the price has the delivery fee included in the price and sometimes it is an additional charge.', v('Delivery Fee'))}
+      </table>
+      <div class="pg-num">7</div>
+    </div>`;
+
+    // Page 8: Ordering and Payment
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 3: Delivery and Invoicing Logistics &amp; Compliance', 'Ordering and Payment')}
+      <table class="field-table">
+        ${fRow('Preferred contact method', v('Preferred Contact Method'))}
+        ${fRow('Preferred ordering method<br>(Email, Phone, Text, Online system)?', v('Preferred Ordering Method'))}
+        ${fRow('Do you require a written contract for purchase? (Yes/No)', r('Written Contract Required'))}
+        ${fRow('Do you accept returns, offer credits/replacements, or do you maintain a no-return policy?', v('Return Credit Policy'))}
+        ${fRow("How many days' notice do you require for an order?", v('Notice Days Required'))}
+        ${fRow('When are orders accepted and what is the cut off day/time for the delivery schedule?', v('Order Cutoff'))}
+        ${fRow('Are there any ordering deadlines for a given period? (day, week, month)', v('Ordering Deadlines'))}
+        ${fRow('What are your invoicing terms?<br>(e.g., Net 30, Payment upon delivery)', v('Invoicing Terms'))}
+        ${fRow('What forms of payment do you accept?', v('Payment Forms Accepted'))}
+        ${fRow('Please explain your credit/return policy for unacceptable quality:', v('Quality Return Policy'))}
+      </table>
+      <div class="pg-num">8</div>
+    </div>`;
+
+  } else {
+
+    // Buyer Page 1: Contact Information
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 1: Institution/Business Profile', 'Contact Information')}
+      <p class="intro-text">This section is for the wholesale buyer to clearly communicate purchasing needs and specifications to the farmer.</p>
+      <table class="field-table">
+        ${fRow('Institution/Business Name', v('Institution Business Name'))}
+        ${fRow('Primary Contact Name', v('Primary Contact Name'))}
+        ${fRow('Phone Number', v('Phone Number'))}
+        ${fRow('Email Address', v('Email Address'))}
+        ${fRow('Institution/Business Address', v('Institution Address'))}
+        ${fRow('Website/Social Media Links (optional)', v('Website Social Media'))}
+        ${fRow('Preferred contact hours, days, and months', v('Preferred Contact Hours'))}
+      </table>
+      <div class="pg-num">11</div>
+    </div>`;
+
+    // Buyer Page 2: Food Service Operation Details
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 1: Institution/Business Profile', 'Food Service Operation Details')}
+      <table class="field-table">
+        ${fRow('Number of meals served daily', v('Meals Served Daily'))}
+        ${fRow('Staff size', v('Staff Size'))}
+        ${fRow('Has your institution/business sourced food directly from a farm, food hub, or farm hub before? (Yes/No)', r('Sourced From Farm Before'))}
+        ${fRow('If yes, please describe your experience:', v('Sourcing Experience'))}
+        ${fRow('Are there any certifications that your institution requires of food producers?', v('Required Certifications'))}
+        ${fRow('Do you have a chef or food service director that you talk to regarding sourcing and cooking local food for your operation?<br>Would you like to be connected to a mentor or someone who is also sourcing local?', v('Chef Food Service Director'))}
+      </table>
+      <div class="pg-num">12</div>
+    </div>`;
+
+    // Buyer Page 3: Product Interest and Usage
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 2: Product Interest and Usage', 'Specific Products')}
+      <p class="intro-text">Are there specific farm products you want to source locally? Are there products you can source now and some that you would like to incorporate in the future? If so, please specify which items are of highest interest for incorporation into menus, and how they would typically be used.</p>
+      ${prodTable('buyerProductTable', ['Farm Product of Interest','Estimated Delivery Frequency (e.g., One-time, Weekly, Monthly, Bi-weekly)','Estimated Quantity Needed (Per Order/Week)','Target Purchase Window (Season)','Planned Menu Use (e.g., Salad Bar, Roasted side, Main dish ingredient)','Required Packaging/Prep Notes (e.g., must be diced, must be peeled, 5 lb bags)'])}
+      <div class="pg-num">13</div>
+    </div>`;
+
+    // Buyer Page 4: High Priority Items
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 3: Specific Needs and Challenges', 'High Priority Items')}
+      <p class="intro-text">This section allows the wholesale buyer to list high-priority items that the dining facility often uses or needs, even if they were not listed by the farmer. This gives the farmer an opportunity to plan to make these products available in the future.</p>
+      ${prodTable('priorityTable', ['Item Needed','Quantity Needed (e.g., 50 cases/month)','Target Purchase Window (Season)','How will this item be used/menued? Why is it important?'])}
+      <div class="pg-num">14</div>
+    </div>`;
+
+    // Buyer Page 5: Processing Capabilities
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 3: Specific Needs and Challenges', 'Processing Capabilities &amp; Preferences')}
+      <p class="intro-text">This section allows the wholesale buyer to describe how the kitchen capacity affects what kind of product they can purchase.</p>
+      <table class="field-table">
+        ${fRow('Does the kitchen have staff/time to process (wash, chop, peel) whole, unprocessed produce? (Please describe.)', v('Kitchen Processing Capability'))}
+        ${fRow('Does your institution have certain packaging requirements for dropoff? (e.g. wax boxes, reusable totes)', v('Packaging Requirements'))}
+        ${fRow('Does your institution have preferred dropoff/delivery times?', v('Preferred Delivery Times'))}
+        ${fRow('If purchasing whole produce, what is the maximum acceptable case/box size for handling?', v('Max Box Size'))}
+        ${fRow('Are there preferred packaging sizes (e.g., 5-lb bulk, individual portions)?', v('Preferred Packaging Sizes'))}
+        ${fRow('Does your institution have an interest in purchasing superficially flawed or No. 2 Grade produce? (Yes/No)', r('Interest Grade 2 Produce'))}
+      </table>
+      <div class="pg-num">15</div>
+    </div>`;
+
+    // Buyer Page 6: Ordering and Payment
+    pages += `<div class="inner-page">
+      ${pgHeader('Section 4: Delivery and Invoicing Logistics &amp; Compliance', 'Ordering and Payment')}
+      <p class="intro-text">This section addresses the crucial details of delivery, invoicing, and regulatory compliance.</p>
+      <table class="field-table">
+        ${fRow('Preferred contact method?', v('Preferred Contact Method'))}
+        ${fRow('Preferred contact person and method for billing, specifically, if different from above?', v('Billing Contact Method'))}
+        ${fRow('Preferred ordering method (Email, Phone, Text, Online system)?', v('Preferred Ordering Method'))}
+        ${fRow('Does your institution require a written contract for purchase? (Yes/No)', r('Written Contract Required'))}
+        ${fRow('Does your institution require certain labeling procedures for food products?', r('Labeling Requirements'))}
+        ${fRow("How many days' notice can you provide for an order?", v('Order Notice Days'))}
+        ${fRow('Are there any days/times delivery MUST be avoided (e.g., during lunch service)?', v('Delivery Avoid Times'))}
+        ${fRow('Is a member of the staff required to be present for the dropoff? Or can detailed dropoff instructions be provided to the producer?', v('Dropoff Staff Required'))}
+        ${fRow('What are your preferred invoicing terms? (e.g., Net 30, Payment upon delivery)', v('Preferred Invoicing Terms'))}
+        ${fRow('What forms of payment can you administer?', v('Payment Forms'))}
+      </table>
+      <div class="pg-num">16</div>
+    </div>`;
+  }
+
+  // ════════════════════════
+  //  PRINT STYLESHEET
+  // ════════════════════════
+  const css = `
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, Helvetica, sans-serif; background: #fff; }
+
+    /* Each page breaks before */
+    .inner-page {
+      width: 8.5in;
+      min-height: 11in;
+      padding: 0.55in 0.65in;
+      page-break-after: always;
+      position: relative;
+      background: #fff;
+      overflow: hidden;
+    }
+    .inner-page:last-child { page-break-after: avoid; }
+
+    /* ── COVER ── */
+    .cover-title {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #3a6b1a;
+      line-height: 1.15;
+      margin-bottom: 10pt;
+    }
+    .cover-sub {
+      font-size: 13pt;
+      color: #222;
+      margin-bottom: 10pt;
+      line-height: 1.5;
+    }
+    .cover-rule {
+      height: 4pt;
+      background: #3a6b1a;
+      margin: 8pt 0;
+    }
+    .cover-photo-area {
+      margin: 0;
+    }
+    .cover-photo-placeholder {
+      width: 100%;
+      height: 3.2in;
+      background: #e8e8e8;
+    }
+    .cover-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 18pt 0 10pt;
+    }
+    .cover-logo-box {
+      border: 2pt solid #3a6b1a;
+      padding: 6pt 24pt 8pt;
+      text-align: center;
+      display: inline-block;
+    }
+    .cover-logo-text {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #3a6b1a;
+      letter-spacing: .04em;
+    }
+    .logo-y { font-style: italic; }
+    .cover-logo-sub {
+      font-size: 9pt;
+      color: #3a6b1a;
+    }
+    .cover-footer {
+      position: absolute;
+      bottom: 0.35in;
+      left: 0.65in;
+      right: 0.65in;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5pt;
+      color: #3a6b1a;
+    }
+
+    /* ── INNER PAGE ── */
+    .pg-header { text-align: center; margin-bottom: 14pt; }
+    .part-title {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #3a6b1a;
+      margin-bottom: 4pt;
+    }
+    .section-title {
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #222;
+      text-decoration: underline;
+      margin-bottom: 4pt;
+    }
+    .subsection-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #222;
+    }
+    .intro-text {
+      font-size: 8.5pt;
+      font-style: italic;
+      color: #444;
+      margin-bottom: 8pt;
+      line-height: 1.45;
+    }
+    .pg-num {
+      position: absolute;
+      bottom: 0.35in;
+      right: 0.65in;
+      font-size: 9pt;
+      color: #222;
+    }
+
+    /* ── FIELD TABLE ── */
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+    .field-table .label-cell {
+      width: 40%;
+      background: #e8ede8;
+      border: 0.75pt solid #aaa;
+      padding: 7pt 8pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .field-table .value-cell {
+      background: #fff;
+      border: 0.75pt solid #aaa;
+      padding: 7pt 8pt;
+      vertical-align: top;
+      min-height: 28pt;
+    }
+    .user-val {
+      color: #3a6b1a;
+      font-style: italic;
+    }
+
+    /* ── CERT TABLE ── */
+    .cert-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin-bottom: 6pt;
+    }
+    .cert-table thead tr th {
+      background: #e8ede8;
+      border: 0.75pt solid #aaa;
+      padding: 6pt 7pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: left;
+      line-height: 1.3;
+    }
+    .cert-table tbody .label-cell {
+      border: 0.75pt solid #aaa;
+      padding: 6pt 7pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .cert-table tbody .check-cell {
+      border: 0.75pt solid #aaa;
+      padding: 6pt 4pt;
+      text-align: center;
+      font-size: 13pt;
+      vertical-align: middle;
+    }
+    .cert-table tbody .value-cell {
+      border: 0.75pt solid #aaa;
+      padding: 6pt 7pt;
+      vertical-align: top;
+      background: #fff;
+    }
+
+    /* ── PRODUCT TABLE ── */
+    .prod-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+    .prod-table thead th {
+      background: #e8ede8;
+      border: 0.75pt solid #aaa;
+      padding: 5pt 4pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.3;
+    }
+    .prod-table tbody .value-cell {
+      border: 0.75pt solid #aaa;
+      padding: 5pt 4pt;
+      vertical-align: top;
+      min-height: 22pt;
+      background: #fff;
+    }
+
+    @media print {
+      @page { size: letter; margin: 0; }
+      body { margin: 0; }
+      .inner-page { page-break-after: always; }
+      .inner-page:last-child { page-break-after: avoid; }
+    }
+  `;
+
+  // ════════════════════════
+  //  OPEN PRINT WINDOW
+  // ════════════════════════
+  const win = window.open('', '_blank');
+  if (!win) {
+    showToast('⚠ Please allow pop-ups for this page, then try again.');
+    return;
+  }
+  win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>FARMWISE Indiana — ${fType} Form</title>
+  <style>${css}</style>
+</head>
+<body>
+  ${pages}
+  <script>
+    window.onload = function() {
+      setTimeout(function() { window.print(); }, 400);
+    };
+  <\/script>
+</body>
+</html>`);
+  win.document.close();
+  showToast('✓ Print dialog opening — choose "Save as PDF"');
+}
+
+</script>
+</body>
+</html>
